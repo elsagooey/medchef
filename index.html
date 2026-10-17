@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f6f7f2">
+    <title>MedChef — Eat well, with confidence</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js" defer></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="MedChef home">
+        <span class="brand-mark" aria-hidden="true">✳</span>
+        <span>medchef<span class="brand-period">.</span></span>
+      </a>
+      <nav aria-label="Main navigation">
+        <a class="nav-link active" href="#scanner">Food check</a>
+        <a class="nav-link" href="#how-it-works">How it works</a>
+      </nav>
+      <a class="pharmacist-link" href="#safety"><span aria-hidden="true">＋</span> Pharmacist-reviewed care</a>
+    </header>
+
+    <main>
+      <section class="hero" id="scanner">
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="eyebrow-dot"></span> A little more peace at mealtime</p>
+          <h1>Good food.<br><em>Safer choices.</em></h1>
+          <p class="hero-description">Check the foods on your list against your medications, then find a meal idea to take to your pharmacist.</p>
+          <div class="trust-note"><span aria-hidden="true">♡</span> Made for real life, and better conversations with your care team.</div>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <div class="art-sun"></div>
+          <div class="art-card">
+            <span class="art-card-icon">✓</span>
+            <span><b>Thoughtful food checks</b><small>One step at a time</small></span>
+          </div>
+          <div class="art-leaf leaf-one"></div>
+          <div class="art-leaf leaf-two"></div>
+          <div class="art-leaf leaf-three"></div>
+          <div class="art-stem"></div>
+          <div class="art-orbit"></div>
+        </div>
+      </section>
+
+      <section class="workspace" aria-label="Food and medication checker">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">YOUR MEALTIME CHECK-IN</p>
+            <h2>What’s on your list today?</h2>
+          </div>
+          <span class="demo-badge"><span></span> Interactive demo</span>
+        </div>
+
+        <div class="checker-grid">
+          <section class="input-panel panel">
+            <div class="panel-title">
+              <span class="step-number">01</span>
+              <div><h3>Your medications</h3><p>Add the medicines you’d like to check.</p></div>
+            </div>
+            <label class="field-label" for="medications">Medication names</label>
+            <input id="medications" type="text" autocomplete="off" placeholder="e.g. warfarin, simvastatin">
+            <div class="suggestion-row" aria-label="Demo medication examples">
+              <button class="suggestion" type="button" data-med="warfarin">+ warfarin</button>
+              <button class="suggestion" type="button" data-med="simvastatin">+ simvastatin</button>
+              <button class="suggestion" type="button" data-med="lisinopril">+ lisinopril</button>
+            </div>
+
+            <div class="panel-divider"></div>
+            <div class="panel-title food-title">
+              <span class="step-number">02</span>
+              <div><h3>Your groceries or meal</h3><p>Type, speak, or add a photo for reference.</p></div>
+            </div>
+            <label class="field-label" for="foods">Food names</label>
+            <div class="textarea-wrap">
+              <textarea id="foods" rows="3" placeholder="e.g. spinach, grapefruit, bananas"></textarea>
+              <button id="voice-button" class="voice-button" type="button" aria-label="Speak your grocery list" title="Speak your grocery list">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="12" rx="3"></rect><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 18v3m-4 0h8"></path></svg>
+              </button>
+            </div>
+            <p id="voice-status" class="voice-status" aria-live="polite"></p>
+
+            <label class="upload-zone" for="photo-input">
+              <span class="upload-icon" aria-hidden="true">↥</span>
+              <span><b>Add a photo</b><small>Choose a pill bottle, grocery item, or menu</small></span>
+              <span class="upload-action">Browse</span>
+            </label>
+            <input id="photo-input" class="visually-hidden" type="file" accept="image/*" capture="environment">
+            <div id="photo-preview" class="photo-preview" hidden></div>
+            <p class="photo-note">Choose “Read text” to run OCR in your browser. The photo isn’t uploaded; the OCR library and language model load from a CDN.</p>
+            <div id="ocr-controls" class="ocr-controls" hidden>
+              <button id="read-photo" class="secondary-button" type="button">Read text in photo</button>
+              <p id="ocr-status" class="ocr-status" role="status" aria-live="polite"></p>
+              <label class="field-label" for="ocr-text">Review and correct the detected text</label>
+              <textarea id="ocr-text" class="ocr-text" rows="4" placeholder="Detected text will appear here. Check it carefully before adding."></textarea>
+              <label class="field-label" for="ocr-destination">Add reviewed text to</label>
+              <div class="ocr-apply-row">
+                <select id="ocr-destination">
+                  <option value="medications">Medication names</option>
+                  <option value="foods">Food names</option>
+                </select>
+                <button id="use-ocr-text" class="secondary-button" type="button">Add to list</button>
+              </div>
+              <p class="photo-note">OCR only reads visible text. It does not identify a pill, verify a label, or check safety. Confirm every entry yourself.</p>
+            </div>
+
+            <button id="check-button" class="primary-button" type="button">
+              Check my list <span aria-hidden="true">→</span>
+            </button>
+            <p class="input-footnote">Demo checks are limited examples, not a complete interaction checker.</p>
+          </section>
+
+          <section class="results-panel panel" aria-live="polite" aria-labelledby="results-title">
+            <div class="results-topline">
+              <div class="panel-title">
+                <span class="result-icon" aria-hidden="true">✳</span>
+                <div><p class="eyebrow">YOUR CHECK-IN</p><h3 id="results-title">Your results will appear here</h3></div>
+              </div>
+              <span id="result-status" class="result-status">READY WHEN YOU ARE</span>
+            </div>
+            <div id="results-content" class="results-content">
+              <div class="empty-state">
+                <div class="empty-illustration" aria-hidden="true">
+                  <span class="plate"></span><span class="food-dot dot-a"></span><span class="food-dot dot-b"></span><span class="food-dot dot-c"></span>
+                  <span class="empty-sparkle">✦</span>
+                </div>
+                <h4>A calmer plate starts with a check.</h4>
+                <p>Add at least one medication and a food above. We’ll show a few example flags and a meal idea to discuss with your pharmacist.</p>
+                <button id="try-example" class="text-button" type="button">Try an example <span aria-hidden="true">→</span></button>
+              </div>
+            </div>
+            <div class="safety-callout" id="safety">
+              <span class="safety-icon" aria-hidden="true">i</span>
+              <p><b>Not a substitute for your care team.</b> Never start, stop, or change a medicine or diet based on this demo. Ask your doctor or pharmacist about your own situation.</p>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section class="how-section" id="how-it-works">
+        <div class="how-intro"><p class="eyebrow">SMALL STEPS, TOGETHER</p><h2>More confidence.<br><em>Not more guesswork.</em></h2></div>
+        <div class="how-steps">
+          <article><span>01</span><h3>Bring your list</h3><p>Gather medication and food names, or keep a photo handy for your care team.</p></article>
+          <article><span>02</span><h3>Notice what to ask</h3><p>See a few common examples worth checking—not a diagnosis or a complete safety review.</p></article>
+          <article><span>03</span><h3>Plan with a pharmacist</h3><p>Get personalized advice before making changes to your medicines or meals.</p></article>
+        </div>
+      </section>
+    </main>
+
+    <footer><a class="brand footer-brand" href="#"><span class="brand-mark" aria-hidden="true">✳</span><span>medchef<span class="brand-period">.</span></span></a><p>Thoughtful tools for better care conversations.</p><span>Prototype · Not medical advice</span></footer>
+  </body>
+</html>
